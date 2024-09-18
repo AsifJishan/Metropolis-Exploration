@@ -2,7 +2,6 @@ from database import Base
 from sqlalchemy import Column, Integer, String, Float, Date, DECIMAL, ForeignKey
 from sqlalchemy.orm import relationship
 
-# Ward model
 class Ward(Base):
     __tablename__ = "Ward"
     Ward_ID = Column(Integer, primary_key=True)
@@ -16,14 +15,13 @@ class Ward(Base):
     Business_Count = Column(Integer)
     Unemployment_Rate = Column(Float)
 
-    # Relationships to link with other tables
     ward_info = relationship("Ward_info", back_populates="ward")
     people = relationship("People", back_populates="ward")
     buildings = relationship("Buildings", back_populates="ward")
     projects = relationship("InfrastructureProjects", back_populates="ward")
     businesses = relationship("Businesses", back_populates="ward")
 
-# Ward_info model
+
 class Ward_info(Base):
     __tablename__ = "Ward_info"
     Area_ID = Column(Integer, primary_key=True)
@@ -40,13 +38,12 @@ class Ward_info(Base):
     Number_of_Playgrounds = Column(Integer)
     Number_of_Libraries = Column(Integer)
 
-    # Relationships to link with other tables
     ward = relationship("Ward", back_populates="ward_info")
     projects = relationship("InfrastructureProjects", back_populates="area")
     businesses = relationship("Businesses", back_populates="area")
     env_data = relationship("EnvData", back_populates="area")
 
-# People model
+
 class People(Base):
     __tablename__ = "People"
     People_ID = Column(Integer, primary_key=True)
@@ -66,10 +63,9 @@ class People(Base):
     Ward_ID = Column(Integer, ForeignKey("Ward.Ward_ID"))
     Area_ID = Column(Integer, ForeignKey("Ward_info.Area_ID"))
 
-    # Relationships
     ward = relationship("Ward", back_populates="people")
 
-# Buildings model
+
 class Buildings(Base):
     __tablename__ = "Buildings"
     Building_ID = Column(Integer, primary_key=True)
@@ -82,10 +78,9 @@ class Buildings(Base):
     Number_of_Parkings = Column(Integer)
     Ward_ID = Column(Integer, ForeignKey("Ward.Ward_ID"))
 
-    # Relationships
     ward = relationship("Ward", back_populates="buildings")
 
-# Vehicles model
+
 class Vehicles(Base):
     __tablename__ = "Vehicles"
     Vehicle_ID = Column(Integer, primary_key=True)
@@ -97,7 +92,7 @@ class Vehicles(Base):
     Vehicle_Color = Column(String)
     Vehicle_Parking_Spot = Column(Integer)
 
-# EnvData model
+
 class EnvData(Base):
     __tablename__ = "EnvData"
     id = Column(Integer, primary_key=True)
@@ -108,10 +103,9 @@ class EnvData(Base):
     recorded_at = Column(Date)
     Area_ID = Column(Integer, ForeignKey("Ward_info.Area_ID"))
 
-    # Relationships
     area = relationship("Ward_info", back_populates="env_data")
 
-# Infrastructure Projects model
+
 class InfrastructureProjects(Base):
     __tablename__ = 'infrastructure_projects'
 
@@ -124,11 +118,10 @@ class InfrastructureProjects(Base):
     ward_id = Column(Integer, ForeignKey('Ward.Ward_ID'))
     area_id = Column(Integer, ForeignKey('Ward_info.Area_ID'))
 
-    # Relationships to access linked Ward and Area data
     ward = relationship("Ward", back_populates="projects")
     area = relationship("Ward_info", back_populates="projects")
 
-# Businesses model
+
 class Businesses(Base):
     __tablename__ = 'businesses'
 
@@ -139,6 +132,5 @@ class Businesses(Base):
     ward_id = Column(Integer, ForeignKey('Ward.Ward_ID'))
     area_id = Column(Integer, ForeignKey('Ward_info.Area_ID'))
 
-    # Relationships to access linked Ward and Area data
     ward = relationship("Ward", back_populates="businesses")
     area = relationship("Ward_info", back_populates="businesses")
